@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a8fcac8c-505a-4bf0-b145-c90fad77ec73" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<twilio:config name="Twilio_Connector_Config" doc:name="Twilio Connector Config" doc:id="ed7760fa-8aa5-4d0e-bb75-1ba7fc3b68ab" >
+		<twilio:account-sid-auth-token-connection username="AC430ddbdb3dca5e42acce6814b38b399b" password="24a34712ee88ba987694ee43a2c1cf51" />
+	</twilio:config>
+	<flow name="twilio-demoFlow" doc:id="50b77b18-a47a-4608-9f20-4ea33fa7cfb9" >
+		<http:listener doc:name="Listener" doc:id="9483954f-6593-42be-85bb-8cf716fc2fbf" path="/twilio" config-ref="HTTP_Listener_config"/>
+		<ee:transform doc:name="Transform Message" doc:id="5cbf8ace-b31b-4f7b-9dc0-6a0f2f3f78fb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/x-www-form-urlencoded
+---
+{
+	From: "+13188911845",
+	To: "+917793938093",
+	Body: "success"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<twilio:create20100401-accounts-messagesjson-by-account-sid doc:name="Create Message" doc:id="5ebf6beb-078f-4bbd-97b1-4461ed2aeeda" config-ref="Twilio_Connector_Config" accountSid="AC430ddbdb3dca5e42acce6814b38b399b"/>
+	</flow>
+</mule>
